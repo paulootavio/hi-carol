@@ -19,21 +19,24 @@ app.get('/users/repos/count', function(req, res) {
     var endpoint = urlGitHub.replace('username', req.query.userName)
 
     request(endpoint,options, function (error, response, body) {
-        if (!error && response.statusCode == 200) {
+       
+      if (!error && response.statusCode == 200) {
           var repos = JSON.parse(body);
           var languagesCountDict = CountLanguages(repos)
 
           if(Object.keys(languagesCountDict).length == 0)
             res.send('Repositories Not Found');
 
-          for (const [key, value] of Object.entries(languagesCountDict)) {
-           
+          for (const [key, value] of Object.entries(languagesCountDict)) {           
             if(key != 'null')
             console.log(key, value);
           }
+          
+          res.send('OK');
         }
-        res.send('OK');
-        console.log(response)
+
+        res.send(response.body);
+        res.statusCode = 400;
       })
 });
 
